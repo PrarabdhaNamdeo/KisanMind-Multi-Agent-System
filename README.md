@@ -66,8 +66,6 @@ KisanMind/
 ├── rag/                 # Government schemes RAG
 │   ├── ingest.py           # PDF → ChromaDB ingestion
 │   └── retriever.py        # Semantic search
-├── ml/                  # Machine learning
-│   └── disease_classifier.py  # RandomForest backup model
 ├── dashboard/           # Streamlit UI
 │   └── app.py              # Main web interface
 ├── data/
