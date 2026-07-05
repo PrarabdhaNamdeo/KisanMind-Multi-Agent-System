@@ -10,8 +10,13 @@ langchain==0.1.9
 langchain-community==0.0.24
 langgraph==0.0.25
 
+<<<<<<< HEAD
 chromadb>=0.4.22
 sentence-transformers>=2.5.1
+=======
+chromadb==0.4.22
+sentence-transformers==2.5.1
+>>>>>>> 4a6d46a8c71dc801cffde92c92d7c4bd8f32ef1a
 pysqlite3-binary
 
 gTTS==2.5.0
