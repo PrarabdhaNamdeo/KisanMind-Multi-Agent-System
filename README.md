@@ -66,8 +66,6 @@ KisanMind/
 ├── rag/                 # Government schemes RAG
 │   ├── ingest.py           # PDF → ChromaDB ingestion
 │   └── retriever.py        # Semantic search
-├── ml/                  # Machine learning
-│   └── disease_classifier.py  # RandomForest backup model
 ├── dashboard/           # Streamlit UI
 │   └── app.py              # Main web interface
 ├── data/
@@ -81,8 +79,8 @@ KisanMind/
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/PrarabdhaNamdeo/KisanMind.git
-cd KisanMind
+git clone https://github.com/PrarabdhaNamdeo/KisanMind-Multi-Agent-System.git
+cd KisanMind-Multi-Agent-System
 ```
 
 ### 2. Install Dependencies
@@ -123,20 +121,23 @@ CREATE TABLE farmer_queries (
 
 ### 4. Configure API Keys
 
-Update in `agents/vision_agent.py`:
-```python
-GEMINI_API_KEY = "your_gemini_api_key_here"
+Copy the example environment file and fill in your own values — the app loads all secrets from `.env` via `python-dotenv`, so nothing needs to be hardcoded in the source files:
+
+```bash
+cp .env.example .env
 ```
 
-Update MySQL credentials in `agents/supplier_agent.py` and `dashboard/app.py`:
-```python
-DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "your_password",
-    "database": "kisanmind"
-}
+Then edit `.env`:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=your_mysql_password_here
+MYSQL_DATABASE=kisanmind
 ```
+
+`.env` is already listed in `.gitignore`, so your credentials won't be committed.
 
 ### 5. Ingest Government Schemes
 ```bash
@@ -243,10 +244,6 @@ ORDER BY s.distance_km ASC
 - [ ] Farmer community forum
 - [ ] Weather-based disease prediction
 - [ ] Drone integration for large farms
-
-## 📄 License
-
-MIT License - See LICENSE file for details
 
 ## 👨‍💻 Author
 
