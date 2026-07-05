@@ -79,8 +79,8 @@ KisanMind/
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/PrarabdhaNamdeo/KissanMind-Multi-Agent-System.git
-cd KissanMind-Multi-Agent-System
+git clone https://github.com/PrarabdhaNamdeo/KisanMind-Multi-Agent-System.git
+cd KisanMind-Multi-Agent-System
 ```
 
 ### 2. Install Dependencies
