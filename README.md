@@ -245,10 +245,6 @@ ORDER BY s.distance_km ASC
 - [ ] Weather-based disease prediction
 - [ ] Drone integration for large farms
 
-## 📄 License
-
-MIT License - See LICENSE file for details
-
 ## 👨‍💻 Author
 
 **Prarabdha Namdeo**
