@@ -65,13 +65,14 @@ KisanMind/
 │   └── orchestrator.py      # State machine coordination
 ├── rag/                 # Government schemes RAG
 │   ├── ingest.py           # PDF → ChromaDB ingestion
-│   └── retriever.py        # Semantic search
+│   └── retriever.py        # Semantic search (auto-builds vector store on first run)
 ├── dashboard/           # Streamlit UI
 │   └── app.py              # Main web interface
 ├── data/
-│   ├── PlantVillage/       # Training dataset (15 disease classes)
-│   ├── chroma_db/          # Vector store
+│   ├── chroma_db/          # Vector store (auto-generated, not committed)
 │   └── schemes/            # Government scheme PDFs
+├── setup_db.py          # One-time script: creates MySQL tables + seed data
+├── add_more_suppliers.py # Adds suppliers for additional districts
 └── output/              # Generated voice notes
 ```
 
@@ -88,38 +89,7 @@ cd KisanMind-Multi-Agent-System
 pip install -r requirements.txt
 ```
 
-### 3. Setup MySQL Database
-```sql
-CREATE DATABASE kisanmind;
-
-CREATE TABLE suppliers (
-    supplier_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100),
-    address VARCHAR(200),
-    phone VARCHAR(20),
-    district VARCHAR(50),
-    distance_km FLOAT
-);
-
-CREATE TABLE supplier_inventory (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    supplier_id INT,
-    medicine_name VARCHAR(100),
-    in_stock BOOLEAN,
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
-);
-
-CREATE TABLE farmer_queries (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    farmer_phone VARCHAR(20),
-    disease VARCHAR(100),
-    confidence FLOAT,
-    location VARCHAR(100),
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### 4. Configure API Keys
+### 3. Configure API Keys
 
 Copy the example environment file and fill in your own values — the app loads all secrets from `.env` via `python-dotenv`, so nothing needs to be hardcoded in the source files:
 
@@ -132,17 +102,43 @@ Then edit `.env`:
 GEMINI_API_KEY=your_gemini_api_key_here
 
 MYSQL_HOST=localhost
+MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=your_mysql_password_here
 MYSQL_DATABASE=kisanmind
+# Set to true only for local MySQL without SSL. Leave false for cloud-hosted MySQL (e.g. Aiven).
+MYSQL_SSL_DISABLED=false
 ```
 
 `.env` is already listed in `.gitignore`, so your credentials won't be committed.
 
-### 5. Ingest Government Schemes
+> **Using a cloud MySQL provider (e.g. Aiven, PlanetScale, Railway)?** Use the host, port, user, password, and database name from your provider's dashboard instead of the localhost defaults above. Cloud MySQL providers typically require SSL and a custom port rather than the default 3306.
+
+### 4. Setup MySQL Database
+
+Instead of running SQL manually, two scripts handle this for you — they read your `.env` credentials and connect using the same `mysql-connector-python` dependency already in `requirements.txt`:
+
+```bash
+python setup_db.py
+```
+
+This creates the `suppliers`, `supplier_inventory`, and `farmer_queries` tables (if they don't already exist) and seeds sample suppliers/inventory for Bhopal and Indore so the app returns real results out of the box. Safe to run more than once — it skips seeding if data already exists.
+
+To add sample suppliers for the remaining districts (Vidisha, Narsinghpur, Jabalpur, Sagar, Gwalior, Ujjain):
+
+```bash
+python add_more_suppliers.py
+```
+
+This is also safe to re-run — it checks by supplier name before inserting, so it won't create duplicates.
+
+> Both scripts contain no credentials themselves — they read everything from your `.env` file at runtime, so they're safe to keep in version control.
+
+### 5. Ingest Government Schemes (optional)
 ```bash
 python rag/ingest.py
 ```
+This is optional — `rag/retriever.py` automatically builds the vector store on first use if it doesn't already exist. Running this manually just lets you pre-build it and confirm the PDFs ingest correctly before starting the app.
 
 ### 6. Run Application
 ```bash
