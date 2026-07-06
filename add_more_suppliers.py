@@ -5,9 +5,6 @@ without touching your existing Bhopal/Indore data.
 
 HOW TO RUN:
     python add_more_suppliers.py
-
-Safe to run multiple times - it checks by supplier name before inserting,
-so it won't create duplicates if you run it twice.
 """
 
 import os
