@@ -1,17 +1,3 @@
-"""
-One-time setup script: creates tables and inserts sample data
-into your Aiven MySQL database.
-
-HOW TO RUN:
-1. Make sure your .env file has the correct MYSQL_HOST, MYSQL_PORT,
-   MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE values from Aiven.
-2. Place this file in the root of your project (same level as requirements.txt).
-3. From your terminal, with your venv activated, run:
-       python setup_db.py
-4. You should see confirmation messages printed for each step.
-   Safe to run more than once - it checks before creating/inserting.
-"""
-
 import os
 import mysql.connector
 from mysql.connector import Error
